@@ -112,6 +112,8 @@ namespace RobotLocalization
     from_ll_srv_ = nh.advertiseService("fromLL", &NavSatTransform::fromLLCallback, this);
     set_utm_zone_srv_ = nh.advertiseService("setUTMZone", &NavSatTransform::setUTMZoneCallback, this);
 
+    start_heading_srv_ = nh.advertiseService("startHeading", &NavSatTransform::startHeadingCallback, this);
+
     if (use_manual_datum_ && nh_priv.hasParam("datum"))
     {
       XmlRpc::XmlRpcValue datum_config;
@@ -703,16 +705,15 @@ namespace RobotLocalization
                          rpy_angles.getX() << ", " << rpy_angles.getY() << ", " << rpy_angles.getZ() << ")");
 
         has_transform_imu_ = true;
-
-        nh.advertiseService("startHeading", &NavSatTransform::startHeadingCallback, this);
       }
     }
   }
 
-  void NavSatTransform::startHeadingCallback(robot_localization::StartHeading::Request& request, 
+  bool NavSatTransform::startHeadingCallback(robot_localization::StartHeading::Request& request, 
     robot_localization::StartHeading::Response& response)
   {
-    response.heading = transform_orientation_;
+    response.heading = tf2::toMsg(transform_orientation_);
+    return true;
   }
 
 

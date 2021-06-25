@@ -46,6 +46,7 @@
 #include <sensor_msgs/NavSatFix.h>
 
 #include <tf2/LinearMath/Transform.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_ros/static_transform_broadcaster.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
@@ -160,7 +161,7 @@ class NavSatTransform
 
 
     //! @brief Service giving inital heading used by navsat transform
-    void startHeadingCallback(robot_localization::StartHeading::Request& request, 
+    bool startHeadingCallback(robot_localization::StartHeading::Request& request, 
     robot_localization::StartHeading::Response& response);
 
     //! @brief Whether or not we broadcast the cartesian transform
@@ -360,6 +361,8 @@ class NavSatTransform
     //! @brief Service for set UTM zone
     //!
     ros::ServiceServer set_utm_zone_srv_;
+
+    ros::ServiceServer start_heading_srv_;
 
     //! @brief Transform buffer for managing coordinate transforms
     //!
