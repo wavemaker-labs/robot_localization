@@ -67,6 +67,7 @@ add_service_files(
     ToggleFilterProcessing.srv
     FromLL.srv
     ToLL.srv
+    StartHeading.srv
 )
 
 generate_messages(

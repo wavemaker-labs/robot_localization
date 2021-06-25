@@ -703,9 +703,18 @@ namespace RobotLocalization
                          rpy_angles.getX() << ", " << rpy_angles.getY() << ", " << rpy_angles.getZ() << ")");
 
         has_transform_imu_ = true;
+
+        nh.advertiseService("startHeading", &NavSatTransform::startHeadingCallback, this);
       }
     }
   }
+
+  void NavSatTransform::startHeadingCallback(robot_localization::StartHeading::Request& request, 
+    robot_localization::StartHeading::Response& response)
+  {
+    response.heading = transform_orientation_;
+  }
+
 
   void NavSatTransform::odomCallback(const nav_msgs::OdometryConstPtr& msg)
   {

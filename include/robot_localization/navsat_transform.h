@@ -37,6 +37,7 @@
 #include <robot_localization/ToLL.h>
 #include <robot_localization/FromLL.h>
 #include <robot_localization/SetUTMZone.h>
+#include <robot_localization/StartHeading.h>
 
 #include <ros/ros.h>
 
@@ -156,6 +157,11 @@ class NavSatTransform
     //! @param[in] point the point in map frame to use to transform
     //!
     void mapToLL(const tf2::Vector3& point, double& latitude, double& longitude, double& altitude) const;
+
+
+    //! @brief Service giving inital heading used by navsat transform
+    void startHeadingCallback(robot_localization::StartHeading::Request& request, 
+    robot_localization::StartHeading::Response& response);
 
     //! @brief Whether or not we broadcast the cartesian transform
     //!
