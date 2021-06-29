@@ -186,6 +186,8 @@ class NavSatTransform
     //!
     bool has_transform_imu_;
 
+    bool has_initial_heading_;
+
     //! @brief Signifies that we have received a usable odometry message
     //!
     bool has_transform_odom_;
@@ -301,6 +303,8 @@ class NavSatTransform
     //! @brief Latest IMU orientation
     //!
     tf2::Quaternion transform_orientation_;
+
+    tf2::Quaternion initial_heading_;
 
     //! @brief Latest GPS data, stored as Cartesian coords
     //!

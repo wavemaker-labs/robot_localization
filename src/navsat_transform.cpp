@@ -64,7 +64,8 @@ namespace RobotLocalization
     utm_zone_(0),
     world_frame_id_("odom"),
     transform_timeout_(ros::Duration(0)),
-    tf_listener_(tf_buffer_)
+    tf_listener_(tf_buffer_),
+    has_initial_heading_(false)
   {
     ROS_INFO("Waiting for valid clock time...");
     ros::Time::waitForValid();
@@ -700,7 +701,8 @@ namespace RobotLocalization
         mat.setRPY(0.0, 0.0, yaw_offset);
         rpy_angles = mat * rpy_angles;
         transform_orientation_.setRPY(rpy_angles.getX(), rpy_angles.getY(), rpy_angles.getZ());
-
+        initial_heading_.setRPY(rpy_angles.getX(), rpy_angles.getY(), rpy_angles.getZ());
+        has_initial_heading_ = true;
         ROS_DEBUG_STREAM("Initial corrected orientation roll, pitch, yaw is (" <<
                          rpy_angles.getX() << ", " << rpy_angles.getY() << ", " << rpy_angles.getZ() << ")");
 
@@ -712,8 +714,15 @@ namespace RobotLocalization
   bool NavSatTransform::startHeadingCallback(robot_localization::StartHeading::Request& request, 
     robot_localization::StartHeading::Response& response)
   {
-    response.heading = tf2::toMsg(transform_orientation_);
-    return true;
+    if (has_initial_heading_)
+    {
+      response.heading = tf2::toMsg(initial_heading_);
+      return true;
+    }
+    else{
+      return false;
+    }
+
   }
 
 
