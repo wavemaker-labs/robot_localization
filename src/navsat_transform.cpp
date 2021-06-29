@@ -41,6 +41,11 @@
 
 #include <string>
 
+bool has_initial_heading_;
+has_initial_heading_ = false;
+
+tf2::Quaternion initial_heading_;
+
 namespace RobotLocalization
 {
   NavSatTransform::NavSatTransform(ros::NodeHandle nh, ros::NodeHandle nh_priv) :
@@ -65,7 +70,6 @@ namespace RobotLocalization
     world_frame_id_("odom"),
     transform_timeout_(ros::Duration(0)),
     tf_listener_(tf_buffer_),
-    has_initial_heading_(false)
   {
     ROS_INFO("Waiting for valid clock time...");
     ros::Time::waitForValid();
@@ -261,6 +265,9 @@ namespace RobotLocalization
       double imu_pitch;
       double imu_yaw;
       mat.getRPY(imu_roll, imu_pitch, imu_yaw);
+
+      initial_heading_.setRPY(imu_roll, imu_pitch, imu_yaw);
+      has_initial_heading_ = true;
 
       /* The IMU's heading was likely originally reported w.r.t. magnetic north.
        * However, all the nodes in robot_localization assume that orientation data,
@@ -701,8 +708,6 @@ namespace RobotLocalization
         mat.setRPY(0.0, 0.0, yaw_offset);
         rpy_angles = mat * rpy_angles;
         transform_orientation_.setRPY(rpy_angles.getX(), rpy_angles.getY(), rpy_angles.getZ());
-        initial_heading_.setRPY(rpy_angles.getX(), rpy_angles.getY(), rpy_angles.getZ());
-        has_initial_heading_ = true;
         ROS_DEBUG_STREAM("Initial corrected orientation roll, pitch, yaw is (" <<
                          rpy_angles.getX() << ", " << rpy_angles.getY() << ", " << rpy_angles.getZ() << ")");
 
