@@ -159,11 +159,6 @@ class NavSatTransform
     //!
     void mapToLL(const tf2::Vector3& point, double& latitude, double& longitude, double& altitude) const;
 
-
-    //! @brief Service giving inital heading used by navsat transform
-    bool startHeadingCallback(robot_localization::StartHeading::Request& request, 
-    robot_localization::StartHeading::Response& response);
-
     //! @brief Whether or not we broadcast the cartesian transform
     //!
     bool broadcast_cartesian_transform_;
@@ -362,7 +357,7 @@ class NavSatTransform
     //!
     ros::ServiceServer set_utm_zone_srv_;
 
-    ros::ServiceServer start_heading_srv_;
+    ros::ServiceClient start_heading_clt_;
 
     //! @brief Transform buffer for managing coordinate transforms
     //!

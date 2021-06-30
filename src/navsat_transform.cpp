@@ -117,7 +117,7 @@ namespace RobotLocalization
     from_ll_srv_ = nh.advertiseService("fromLL", &NavSatTransform::fromLLCallback, this);
     set_utm_zone_srv_ = nh.advertiseService("setUTMZone", &NavSatTransform::setUTMZoneCallback, this);
 
-    start_heading_srv_ = nh.advertiseService("startHeading", &NavSatTransform::startHeadingCallback, this);
+    start_heading_clt_ = nh.serviceClient<robot_localization::StartHeading>("startHeading");
 
     if (use_manual_datum_ && nh_priv.hasParam("datum"))
     {
@@ -268,6 +268,10 @@ namespace RobotLocalization
 
       initial_heading_.setRPY(imu_roll, imu_pitch, imu_yaw);
       has_initial_heading_ = true;
+
+      robot_localization::StartHeading srv;
+      srv.request.heading = tf2::toMsg(initial_heading_);
+      start_heading_clt_.call(srv);
 
       /* The IMU's heading was likely originally reported w.r.t. magnetic north.
        * However, all the nodes in robot_localization assume that orientation data,
@@ -714,20 +718,6 @@ namespace RobotLocalization
         has_transform_imu_ = true;
       }
     }
-  }
-
-  bool NavSatTransform::startHeadingCallback(robot_localization::StartHeading::Request& request, 
-    robot_localization::StartHeading::Response& response)
-  {
-    if (has_initial_heading_)
-    {
-      response.heading = tf2::toMsg(initial_heading_);
-      return true;
-    }
-    else{
-      return false;
-    }
-
   }
 
 
