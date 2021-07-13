@@ -41,13 +41,13 @@
 
 #include <string>
 
-bool has_initial_heading_;
-has_initial_heading_ = false;
+namespace RobotLocalization
+{
+
+bool has_initial_heading_ = false;
 
 tf2::Quaternion initial_heading_;
 
-namespace RobotLocalization
-{
   NavSatTransform::NavSatTransform(ros::NodeHandle nh, ros::NodeHandle nh_priv) :
     broadcast_cartesian_transform_(false),
     broadcast_cartesian_transform_as_parent_frame_(false),
@@ -69,7 +69,7 @@ namespace RobotLocalization
     utm_zone_(0),
     world_frame_id_("odom"),
     transform_timeout_(ros::Duration(0)),
-    tf_listener_(tf_buffer_),
+    tf_listener_(tf_buffer_)
   {
     ROS_INFO("Waiting for valid clock time...");
     ros::Time::waitForValid();
