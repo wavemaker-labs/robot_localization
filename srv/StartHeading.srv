@@ -1,2 +1,3 @@
 geometry_msgs/Quaternion heading
 ---
+bool confirmed
